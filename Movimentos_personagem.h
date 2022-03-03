@@ -5,11 +5,10 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
-#include "Movimentos_personagem.h"
 
 int posicao;
 
-void Desenha_personagem(int key_up, int key_down, int key_right, int key_left, int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota, int *count, ALLEGRO_BITMAP *fundo){
+void Desenha_personagem(int key_up, int key_down, int key_right, int key_left, int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota, int *count){
     if(key_down == 1){
         *pos_y += 1;
         if(*count >= 0 && *count <9){posicao = 0;}
@@ -34,7 +33,6 @@ void Desenha_personagem(int key_up, int key_down, int key_right, int key_left, i
         if(*count >= 9 && *count <18){posicao = 10;}
         if(*count >= 18 && *count <27){ posicao = 11;}
     }
-    al_draw_scaled_bitmap(fundo, 0,0,800,608,0,0,800,600, 0);
     switch(posicao){
         case 0:
         al_draw_bitmap_region(prota, 0,0,32,32,*pos_x,*pos_y,0);
