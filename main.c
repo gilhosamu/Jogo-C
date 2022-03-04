@@ -4,8 +4,9 @@
 #include <allegro5/allegro_image.h>
 #include "Movimentos_personagem.h"
 #include "Desenha_fundo.h"
+#include "Colisao.h"
 
-    int x=10,y=10, count=0, mapa_atual=0;
+    int x=10,y=10, count=0, mapa_atual=0, proibido = 0 ;
     const float FPS = 60;
     int width = 800; int height = 600;
     int key_down=0, key_up=0, key_left=0, key_right=0;
@@ -15,6 +16,7 @@ int main(){
  al_init(); al_init_image_addon(); if(!al_init()){return -1;}
  bool done=false, isLoaded=false;
  ALLEGRO_BITMAP *prota  = al_load_bitmap("Personagens/Protagonista.bmp"); al_convert_mask_to_alpha(prota, al_map_rgb(255,0,255));
+ ALLEGRO_BITMAP *fundo  = al_load_bitmap("Mapas/vila.bmp");
  ALLEGRO_TIMER *timer = NULL;
  ALLEGRO_DISPLAY *display = NULL;
  ALLEGRO_EVENT_QUEUE *event_queue = NULL;
@@ -74,8 +76,10 @@ int main(){
             if(ev.type == ALLEGRO_EVENT_TIMER){
               count++;
             if((key_up!=0 || key_down!=0 || key_right!=0 || key_left!=0) && (al_is_event_queue_empty(event_queue))){
-                Desenha_fundo(&mapa_atual);
-                Desenha_personagem(key_up, key_down, key_right, key_left, &x, &y, prota, &count);
+                Desenha_fundo(&mapa_atual, fundo);
+                Desenha_personagem(key_up, key_down, key_right, key_left, &x, &y, prota, &count, &proibido);
+                Colisao(&mapa_atual, &x, &y);
+                printf("\n posx %d  posy %d", x, y);
               }
             if(count == 27){
               count = 0;
