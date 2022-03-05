@@ -5,21 +5,26 @@
 #include "Movimentos_personagem.h"
 #include "Desenha_fundo.h"
 #include "Colisao.h"
+#include "Desenha_ov.h"
 
-    int x=10,y=10, count=0, mapa_atual=0, proibido = 0 ;
+    int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10;
     const float FPS = 60;
     int width = 800; int height = 600;
     int key_down=0, key_up=0, key_left=0, key_right=0;
+    double i;
   
 int main(){ 
 
  al_init(); al_init_image_addon(); if(!al_init()){return -1;}
- bool done=false, isLoaded=false;
+ bool done=false, col[4];
  ALLEGRO_BITMAP *prota  = al_load_bitmap("Personagens/Protagonista.bmp"); al_convert_mask_to_alpha(prota, al_map_rgb(255,0,255));
  ALLEGRO_BITMAP *fundo  = al_load_bitmap("Mapas/vila.bmp");
+ ALLEGRO_BITMAP *colisao_1 = al_load_bitmap("Mapas/vila_col.bmp");
+ ALLEGRO_BITMAP *over  = al_load_bitmap("Mapas/vila_ov.bmp"); al_convert_mask_to_alpha(over, al_map_rgb(0,0,0));
  ALLEGRO_TIMER *timer = NULL;
  ALLEGRO_DISPLAY *display = NULL;
  ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+ ALLEGRO_COLOR i;
 
  timer = al_create_timer(1.0/FPS); if(!timer){return -1;}
  display = al_create_display(width, height); if(!display){return -1;}
@@ -71,32 +76,38 @@ int main(){
 				  	key_left = 0;
 			  		break;
             }}
-
+            al_set_target_backbuffer(display);
 
             if(ev.type == ALLEGRO_EVENT_TIMER){
               count++;
             if((key_up!=0 || key_down!=0 || key_right!=0 || key_left!=0) && (al_is_event_queue_empty(event_queue))){
+              movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2);
+              Desenha_fundo_colisao(&mapa_atual, colisao_1);
+              i = al_get_pixel(al_get_backbuffer(display), x2,y2);
+              if(i.r != 1){x2 = x ; y2 = y;}
+              i = al_get_pixel(al_get_backbuffer(display), x2+32,y2);
+              if(i.r != 1){x2 = x ; y2 = y;}
+              i = al_get_pixel(al_get_backbuffer(display), x2,y2+32);
+              if(i.r != 1){x2 = x ; y2 = y;}
+              i = al_get_pixel(al_get_backbuffer(display), x2+32,y2+32);
+              if(i.r != 1){x2 = x ; y2 = y;}
+              Troca_mapa(&mapa_atual, &x2, &y2);
+
+
                 Desenha_fundo(&mapa_atual, fundo);
-                Desenha_personagem(key_up, key_down, key_right, key_left, &x, &y, prota, &count, &proibido);
-                Colisao(&mapa_atual, &x, &y);
-                printf("\n posx %d  posy %d", x, y);
+                Desenha_personagem(&x, &y, prota);
+                Desenha_ov(&mapa_atual, over);
+                printf("\n posx %d  posy %d", x2, y2);
               }
             if(count == 27){
               count = 0;
             }
+            x = x2; y = y2;
             al_flip_display();
-           }
-          //limites 
-            if ( x < 0 ) x = 0;
-            if ( x > 800 ) x = 800;
-            if ( y < 0 ) y = 0;
-            if ( y > 600 ) y = 600;
-  
-        
+            }
     }
  
    
  al_destroy_bitmap(prota);
  return 0;
 }
-

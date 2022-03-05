@@ -9,32 +9,34 @@
 
 int posicao;
 
-void Desenha_personagem(int key_up, int key_down, int key_right, int key_left, int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota, int *count, int *proibido){
+void movimenta_personagem(int key_up, int key_down, int key_right, int key_left, int *count, int *x, int *y){
     if(key_down == 1){
-        *pos_y += velocidade_carinha;
+        *y += velocidade_carinha;
         if(*count >= 0 && *count <9){posicao = 0;}
         if(*count >= 9 && *count <18){posicao = 1;}
         if(*count >= 18 && *count <27){posicao = 2;}
     }
     if(key_up == 1){
-        *pos_y -= velocidade_carinha;
+        *y -= velocidade_carinha;
         if(*count >= 0 && *count <9){posicao = 3;}
         if(*count >= 9 && *count <18){posicao = 4;}
         if(*count >= 18 && *count <27){posicao = 5;}
     }
     if(key_left == 1){
-        *pos_x -= velocidade_carinha;
+        *x -= velocidade_carinha;
         if(*count >= 0 && *count <9){posicao = 6;}
         if(*count >= 9 && *count <18){posicao = 7;}
         if(*count >= 18 && *count <27){posicao = 8;}
     }
     if(key_right == 1){
-        *pos_x += velocidade_carinha;
+        *x += velocidade_carinha;
         if(*count >= 0 && *count <9){posicao = 9;}
         if(*count >= 9 && *count <18){posicao = 10;}
         if(*count >= 18 && *count <27){ posicao = 11;}
     }
-    if(*proibido == 0){
+}
+
+void Desenha_personagem(int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota){
     switch(posicao){
         case 0:
         al_draw_bitmap_region(prota, 0,0,32,32,*pos_x,*pos_y,0);
@@ -72,7 +74,6 @@ void Desenha_personagem(int key_up, int key_down, int key_right, int key_left, i
         case 11:
         al_draw_bitmap_region(prota, 64,64,32,32,*pos_x,*pos_y,0);
         break;
-        }
     }
 }
 #endif
