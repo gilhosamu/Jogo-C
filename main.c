@@ -9,55 +9,51 @@
 #include "Colisao.h"
 #include "Desenha_ov.h"
 
-    int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10;
-    const float FPS = 60;
-    int width = 800; int height = 600;
-    int key_down=0, key_up=0, key_left=0, key_right=0;
-    double i;
+
+
+    int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10; //variáveis que serão utilizadas pelo personagem
+    const float FPS = 60; //taxa de quadros
+    int width = 800; int height = 600; //tamanho da tela
+    int key_down=0, key_up=0, key_left=0, key_right=0; // teclas do teclado
   
 int main(){ 
 
- al_init(); al_init_image_addon(); al_init_acodec_addon();
- bool done=false, col[4];
+//inicializa o allegro
+ al_init(); al_init_image_addon(); al_init_acodec_addon(); al_install_audio();
+ al_init_primitives_addon();
+ al_install_keyboard();
+ bool done=false;
 
+
+//carrega todos o bitmaps do jogo
  ALLEGRO_BITMAP *prota  = al_load_bitmap("Personagens/Protagonista.bmp"); al_convert_mask_to_alpha(prota, al_map_rgb(255,0,255));
  ALLEGRO_BITMAP *fundo  = al_load_bitmap("Mapas/vila.bmp");
  ALLEGRO_BITMAP *colisao_1 = al_load_bitmap("Mapas/vila_col.bmp");
  ALLEGRO_BITMAP *over  = al_load_bitmap("Mapas/vila_ov.bmp"); al_convert_mask_to_alpha(over, al_map_rgb(0,0,0));
 
+//cria um timer a 60 FPS
  ALLEGRO_TIMER *timer = NULL;
-
- ALLEGRO_DISPLAY *display = NULL;
-
-
-ALLEGRO_AUDIO_STREAM *musica_vila = al_load_audio_stream("soundtracks/vila.ogg", 1, 1024);
-//ALLEGRO_SAMPLE *musica_vila_sample = NULL;
-al_attach_audio_stream_to_mixer(musica_vila, al_get_default_mixer());
-al_set_audio_stream_playing(musica_vila, true);
-
-
-/*
-ALLEGRO_VOICE *voice; voice = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
-ALLEGRO_MIXER *mixer; mixer = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
-al_attach_mixer_to_voice(mixer, voice);
-al_reserve_samples(1);
-ALLEGRO_SAMPLE *musica_vila = al_load_sample("sounds/vila.ogg");
-ALLEGRO_SAMPLE_INSTANCE *musica_vila_instancia = al_create_sample_instance(musica_vila);
-al_set_sample_instance_playmode(musica_vila_instancia, ALLEGRO_PLAYMODE_LOOP);
-al_attach_sample_instance_to_mixer(musica_vila_instancia, al_get_default_mixer());
-*/
-
- ALLEGRO_EVENT_QUEUE *event_queue = NULL;
- ALLEGRO_COLOR i;
-
  timer = al_create_timer(1.0/FPS); if(!timer){return -1;}
+
+//cria um display
+ ALLEGRO_DISPLAY *display = NULL;
  display = al_create_display(width, height); if(!display){return -1;}
 
-  al_init_primitives_addon();
-	al_install_keyboard();
-  al_install_audio();
+//parte de audio
+ALLEGRO_AUDIO_STREAM *musica_vila = al_load_audio_stream("soundtracks/vila.ogg", 1, 1024);
+ALLEGRO_AUDIO_STREAM *dungeon = al_load_audio_stream("soundtracks/dungeon.ogg", 1, 1024);
+al_reserve_samples(4);
+al_attach_audio_stream_to_mixer(musica_vila, al_get_default_mixer());
+al_attach_audio_stream_to_mixer(dungeon, al_get_default_mixer());
+al_set_audio_stream_playing(musica_vila, false);
+al_set_audio_stream_playing(dungeon, false);
+ALLEGRO_SAMPLE *game_over = al_load_sample("soundtracks/Game_Over.ogg");
+ALLEGRO_SAMPLE *fanfare = al_load_sample("soundtracks/fanfare.ogg");
 
-	event_queue = al_create_event_queue();
+
+ ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+ ALLEGRO_COLOR i; //será usado na detectar as colisões
+ event_queue = al_create_event_queue();
 
   al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -65,14 +61,13 @@ al_attach_sample_instance_to_mixer(musica_vila_instancia, al_get_default_mixer()
 
   al_start_timer(timer);
 
- while (!done){ 
+ while (!done){ //enquando o jogo estiver rodando, todas as ações serão concentradas dentro deste loop
+
       ALLEGRO_EVENT ev;
 		  al_wait_for_event(event_queue, &ev);
-      if(ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){done = true;}
+      if(ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){done = true;} //ESC para fechar o jogo
 
-      //al_play_sample_instance(musica_vila_instancia);
-      //al_play_sample(musica_vila_sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-
+      // faz o procedimento mostrado pelo professor para detecção de teclas mantidas pressionadas
       if(ev.type == ALLEGRO_EVENT_KEY_DOWN){
 			  switch(ev.keyboard.keycode){
           case ALLEGRO_KEY_W:
@@ -104,13 +99,21 @@ al_attach_sample_instance_to_mixer(musica_vila_instancia, al_get_default_mixer()
 				  	key_left = 0;
 			  		break;
             }}
-            al_set_target_backbuffer(display);
 
-            if(ev.type == ALLEGRO_EVENT_TIMER){
-              count++;
-            if((key_up!=0 || key_down!=0 || key_right!=0 || key_left!=0) && (al_is_event_queue_empty(event_queue))){
-              movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2);
-              Desenha_fundo_colisao(&mapa_atual, colisao_1);
+            al_set_target_backbuffer(display); //coloca o display em buffer para gerar um bitmap(será usado para detectar colisões)
+
+            if(ev.type == ALLEGRO_EVENT_TIMER){ //espera o timer
+              count++; // para contar o sprite das animções dos personagens
+
+            if(al_is_event_queue_empty(event_queue)){ // espera a fila de eventos ficar livre
+              movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2); //no arquivo "Movimentos_personagem.h"
+              Desenha_fundo_colisao(&mapa_atual, colisao_1); //no arquivo "Desenha_fundo.h"
+
+              /*
+              está parte do código verifica se o personagem encostou em uma zona do choque(muros, paredes, etc...)
+              funciona através da detecção de pixel na tela, todo o mapa é coberto com a cor 255, 0, 255 e as partes que colidem são marcadas com preto
+              caso a função al_get_pixel() detectar alguma cor diferente de 255 no vermelho o personagem não passa por essa zona
+              */
               i = al_get_pixel(al_get_backbuffer(display), x2,y2);
               if(i.r != 1){x2 = x ; y2 = y;}
               i = al_get_pixel(al_get_backbuffer(display), x2+32,y2);
@@ -119,20 +122,24 @@ al_attach_sample_instance_to_mixer(musica_vila_instancia, al_get_default_mixer()
               if(i.r != 1){x2 = x ; y2 = y;}
               i = al_get_pixel(al_get_backbuffer(display), x2+32,y2+32);
               if(i.r != 1){x2 = x ; y2 = y;}
-              Troca_mapa(&mapa_atual, &x2, &y2);
 
+              Troca_mapa(&mapa_atual, &x2, &y2); //no arquivo "Colisao.h"
 
-                Desenha_fundo(&mapa_atual, fundo);
-                Desenha_personagem(&x, &y, prota);
-                Desenha_ov(&mapa_atual, over);
-                printf("\n posx %d  posy %d", x2, y2);
+              if(mapa_atual < 8 && mapa_atual >= 0){ //toca a musica da vila quando personagem se encontra na vila
+                al_set_audio_stream_playing(dungeon, false);
+                al_set_audio_stream_playing(musica_vila, true);
+              }
+
+                Desenha_fundo(&mapa_atual, fundo); //no arquivo "Desenha_fundo.h"
+                Desenha_personagem(&x, &y, prota); //no arquivo "Movimentos_personagem.h"
+                Desenha_ov(&mapa_atual, over); //no arquivo "Desenha_ov.h"
               }
             if(count == 27){
               count = 0;
             }
             x = x2; y = y2;
             al_flip_display();
-            }
+      }
     }
  
    
