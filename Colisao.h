@@ -1,14 +1,6 @@
 #ifndef COLISAO_INCLUDED
 #define COLISAO_INCLUDED
 
-#define BTN(valor, min, max) (valor <= max && valor >= min)
-bool col = false;
-
-void verifica_colisao(int *x, int *y, ALLEGRO_DISPLAY *display){
-    
-}
-
-
 void Troca_mapa(int *mapa_atual, int *pos_x, int  *pos_y){
 
 
@@ -38,6 +30,7 @@ void Troca_mapa(int *mapa_atual, int *pos_x, int  *pos_y){
 
         case 4:
         if(*pos_x == 0){*mapa_atual = 3; *pos_x = 760;}
+        if(*pos_x == 766){*mapa_atual = 8; *pos_x = 100;}
         break;
 
         case 5:
