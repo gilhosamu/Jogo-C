@@ -4,7 +4,15 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
-#include "funcoes/funcoes.h"
+
+#include "./funcoes/funcoes.h" // Import para funcionar no linux
+
+
+// Import para funcionar no MacOsx
+// #include "funcoes/Colisao.c"
+// #include "funcoes/Desenha_fundo.c"
+// #include "funcoes/Movimentos_personagens.c"
+// #include "funcoes/NPCs.c"
 
 int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10, vidas_personagem = 5, stamina = 10; //variáveis que serão utilizadas pelo personagem
 const float FPS = 60; //taxa de quadros
