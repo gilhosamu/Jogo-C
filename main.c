@@ -14,7 +14,7 @@
 // #include "funcoes/Movimentos_personagens.c"
 // #include "funcoes/NPCs.c"
 
-int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10, vidas_personagem = 5, stamina = 10; //variáveis que serão utilizadas pelo personagem
+int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10, vidas_personagem = 5, stamina = 10, load_pos = 0; //variáveis que serão utilizadas pelo personagem
 const float FPS = 60; //taxa de quadros
 int width = 800; int height = 600; //tamanho da tela
 int key_down=0, key_up=0, key_left=0, key_right=0; // teclas do teclado AWSD
@@ -136,7 +136,7 @@ int main(){
         i = al_get_pixel( al_get_backbuffer(display), x2+32,y2+32 );
         if(i.r != 1){ x2 = x ; y2 = y; }
 
-        Troca_mapa(&mapa_atual, &x2, &y2); //no arquivo "Colisao.h"
+        Troca_mapa(&mapa_atual, &x2, &y2, &load_pos); //no arquivo "Colisao.h"
 
         if(mapa_atual < 8 && mapa_atual >= 0) { //toca a musica da vila quando personagem se encontra na vila
           al_set_audio_stream_playing(dungeon, false);
