@@ -1,17 +1,17 @@
 #include "funcoes.h"
 
-struct def{
+struct ini{
         int vidas;
         int causa_dano;
         int px; int py;
         int morto;
     };
     struct NPC{
-        struct def mago_chapeu;
-        struct def mago_careca;
-        struct def skeleton;
-        struct def caveira;
-        struct def zumbi;
+        struct ini mago_chapeu;
+        struct ini mago_careca;
+        struct ini skeleton;
+        struct ini caveira;
+        struct ini zumbi;
     };
 
 void NPC(int *mapa_atual){

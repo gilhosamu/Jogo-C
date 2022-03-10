@@ -141,6 +141,7 @@ int main(){
 
         Desenha_fundo(&mapa_atual, fundo, fundo_dun); //no arquivo "Desenha_fundo.h"
         Desenha_personagem(&x, &y, prota); //no arquivo "Movimentos_personagem.h"
+        NPC(&mapa_atual);
         Desenha_ov(&mapa_atual, over); //no arquivo "Desenha_ov.h"
 
         al_draw_filled_rectangle(15, 15, 15*vidas_personagem*2, 25, al_map_rgb(255,0,0));
