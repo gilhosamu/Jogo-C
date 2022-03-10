@@ -3,11 +3,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
-#include "allegro5/allegro_acodec.h"
-#include "Movimentos_personagem.h"
-#include "Desenha_fundo.h"
-#include "Colisao.h"
-#include "Desenha_ov.h"
+#include <allegro5/allegro_acodec.h>
+#include "funcoes/funcoes.h"
 
 int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10, vidas_personagem = 5, stamina = 10; //variáveis que serão utilizadas pelo personagem
 const float FPS = 60; //taxa de quadros
