@@ -1,12 +1,16 @@
 #TO DO LIST
 `1º adicionar mais personagens da vila`
 essa vila precisa ser povoada para ser uma vila né?
+
 `2º adicionar npcs inimigos`
 dãh, é um rpg então precisamos matar uns monstrinhos.
+
 `3º adicionar sistema de combate`
 ciriar todo o sistema de combate.
+
 `4º adicionar sons`
 pra ficar bacaninha po.
+
 `5º criar entrada, game over e créditos`
 vai que nois fica famoso.
 
