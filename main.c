@@ -53,8 +53,8 @@ int main(){
   al_reserve_samples(4);
   al_attach_audio_stream_to_mixer(musica_vila, al_get_default_mixer());
   al_attach_audio_stream_to_mixer(dungeon, al_get_default_mixer());
-  al_set_audio_stream_playing(musica_vila, false);
-  al_set_audio_stream_playing(dungeon, false);
+  al_set_audio_stream_playmode(musica_vila, ALLEGRO_PLAYMODE_LOOP);
+  al_set_audio_stream_playmode(dungeon, ALLEGRO_PLAYMODE_LOOP);
   ALLEGRO_SAMPLE *game_over = al_load_sample("soundtracks/Game_Over.ogg");
   ALLEGRO_SAMPLE *fanfare = al_load_sample("soundtracks/fanfare.ogg");
 
@@ -116,7 +116,7 @@ int main(){
       
       count++; // para contar o sprite das animções dos personagens
 
-      if(al_is_event_queue_empty(event_queue)) { // espera a fila de eventos ficar livre
+      if(al_is_event_queue_empty(event_queue)){ // espera a fila de eventos ficar livre
 
         movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2); //no arquivo "Movimentos_personagem.h"
         Desenha_fundo_colisao(&mapa_atual, colisao_1, colisao_2); //no arquivo "Desenha_fundo.h"
@@ -158,12 +158,13 @@ int main(){
 
       if(count == 27){ count = 0; }
       x = x2; y = y2; //x2 e y2 são um "buffer" para o personagem não ficar tremendo quando entra em colisão
-
+      load_pos = 1;
       al_flip_display(); // envia os desenhoas à tela
     }
   }
   
   //destroi tudo que foi criado pelo allegro
+  al_destroy_event_queue(event_queue);
   al_destroy_display(display);
   al_destroy_bitmap(fundo);
   al_destroy_bitmap(colisao_1);

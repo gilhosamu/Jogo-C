@@ -5,7 +5,7 @@ struct npc{
     int causa_dano;
     int x; int y;
     int morto;
-    int aut; int pos; int passo;
+    int aut; int pos; float passo;
 };
 struct npc v10;
 
@@ -15,7 +15,7 @@ void NPC(int *mapa_atual, int *count, int load_pos){
     if(load_pos == 0){
          v10.x = 530; v10.y = 82;
     }
-    printf("\n %d  %d  %d  %d", v10.x, v10.y, *count, v10.pos);
+//    printf("\n %d  %d  %d  %d", v10.x, v10.y, *count, v10.pos);
 
     switch(*mapa_atual){
         case 0:
@@ -36,11 +36,9 @@ void NPC(int *mapa_atual, int *count, int load_pos){
                 v10.y = v10.y -1;
             }
         }
-        switch(v10.pos){
-            case 0: al_draw_bitmap_region(V10, 0,96*v10.aut,32,32,v10.x,v10.y,0);
-            case 1: al_draw_bitmap_region(V10, 32,96*v10.aut,32,32,v10.x,v10.y,0);
-            case 2: al_draw_bitmap_region(V10, 64,96*v10.aut,32,32,v10.x,v10.y,0);
-        }
+        if(v10.pos== 0){al_draw_bitmap_region(V10, 0,96*v10.aut,32,32,v10.x,v10.y,0);}
+        if(v10.pos== 1){al_draw_bitmap_region(V10, 32,96*v10.aut,32,32,v10.x,v10.y,0);}
+        if(v10.pos== 2){al_draw_bitmap_region(V10, 64,96*v10.aut,32,32,v10.x,v10.y,0);}
         break;
 
         case 2:
