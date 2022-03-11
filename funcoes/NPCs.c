@@ -9,8 +9,7 @@ struct npc{
 };
 struct npc v10;
 
-void NPC(int *mapa_atual, int *count, int load_pos){
-    ALLEGRO_BITMAP *V10  = al_load_bitmap("Personagens/villagers/v10.bmp");
+void NPC(int *mapa_atual, int *count, int load_pos, ALLEGRO_BITMAP *V10){
 
     if(load_pos == 0){
          v10.x = 530; v10.y = 82;

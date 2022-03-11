@@ -3,7 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-void NPC(int *mapa_atual, int *count, int load_pos);
+void NPC(int *mapa_atual, int *count, int load_pos, ALLEGRO_BITMAP *V10);
 void Troca_mapa(int *mapa_atual, int *pos_x, int  *pos_y, int *load_pos);
 void Desenha_fundo(int *mapa_atual, ALLEGRO_BITMAP *fundo, ALLEGRO_BITMAP * fundo_dun );
 void Desenha_fundo_colisao(int *mapa_atual, ALLEGRO_BITMAP *colisao_1, ALLEGRO_BITMAP *colisao_2);
