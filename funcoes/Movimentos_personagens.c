@@ -1,6 +1,6 @@
 #define velocidade_carinha 1
 #include "funcoes.h"
-int posicao;
+int posicao = 4;
 
 void movimenta_personagem(int key_up, int key_down, int key_right, int key_left, int *count, int *x, int *y){
     if(key_down == 1){

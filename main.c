@@ -7,7 +7,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#include "./funcoes/funcoes.h" // Import para funcionar no linux
+#include "funcoes/funcoes.h" // Import para funcionar no linux
 
 
 // Import para funcionar no MacOsx
@@ -16,10 +16,11 @@
 // #include "funcoes/Movimentos_personagens.c"
 // #include "funcoes/NPCs.c"
 
-int x=10,y=10, count=0, mapa_atual=0; int x2 = 10, y2 = 10, vidas_personagem = 5, stamina = 10, load_pos = 0; //variáveis que serão utilizadas pelo personagem
+int x=416,y=512, count=0, mapa_atual=0; int x2 = 416, y2 = 512, vidas_personagem = 5, stamina = 10, load_pos = 0; //variáveis que serão utilizadas pelo personagem
 const float FPS = 60; //taxa de quadros
 int width = 800; int height = 600; //tamanho da tela
 int key_down=0, key_up=0, key_left=0, key_right=0; // teclas do teclado AWSD
+int T_pressionado=0; int enter_pressionado=0;
   
 int main(){ 
 
@@ -106,6 +107,12 @@ int main(){
         case ALLEGRO_KEY_A:
           key_left = 1;
           break;
+        case ALLEGRO_KEY_T:
+          T_pressionado = 1;
+          break;
+        case ALLEGRO_KEY_ENTER:
+          enter_pressionado = 1;
+          break;
       }
     }
     if(ev.type == ALLEGRO_EVENT_KEY_UP){
@@ -166,10 +173,9 @@ int main(){
         Desenha_personagem(&x, &y, prota); //no arquivo "Movimentos_personagem.h"
         NPC(&mapa_atual, &count, load_pos,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10);
         Desenha_ov(&mapa_atual, over); //no arquivo "Desenha_ov.h"
-
+        escreve_texto(&mapa_atual, fonte, &x, &y, &T_pressionado, &enter_pressionado);
         al_draw_filled_rectangle(15, 15, 15*vidas_personagem*2, 25, al_map_rgb(255,0,0));
         al_draw_filled_rectangle(15, 30, 15*stamina*1.5, 40, al_map_rgb(0,255,125));
-        //al_draw_text(fonte, al_map_rgb(0,0,0),100, 150, 0, "exatamente");
       }
 
       if(count == 27){ count = 0; }
