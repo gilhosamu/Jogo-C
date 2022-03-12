@@ -4,6 +4,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 #include "./funcoes/funcoes.h" // Import para funcionar no linux
 
@@ -28,6 +30,7 @@ int main(){
   al_install_audio();
   al_init_primitives_addon();
   al_install_keyboard();
+  al_init_font_addon(); al_init_ttf_addon();
 
   bool done=false;
 
@@ -49,6 +52,7 @@ int main(){
   ALLEGRO_BITMAP *V9  = al_load_bitmap("Personagens/villagers/v9.bmp");
   ALLEGRO_BITMAP *V10  = al_load_bitmap("Personagens/villagers/v10.bmp");
 
+  ALLEGRO_FONT *fonte = al_load_font("monogram/ttf/monogram.ttf",20 ,0);
 
   //cria um timer a 60 FPS
   ALLEGRO_TIMER *timer = NULL;
@@ -165,6 +169,7 @@ int main(){
 
         al_draw_filled_rectangle(15, 15, 15*vidas_personagem*2, 25, al_map_rgb(255,0,0));
         al_draw_filled_rectangle(15, 30, 15*stamina*1.5, 40, al_map_rgb(0,255,125));
+        //al_draw_text(fonte, al_map_rgb(0,0,0),100, 150, 0, "exatamente");
       }
 
       if(count == 27){ count = 0; }
