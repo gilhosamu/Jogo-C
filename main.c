@@ -38,6 +38,15 @@ int main(){
   ALLEGRO_BITMAP *over  = al_load_bitmap("Mapas/vila_ov.bmp"); al_convert_mask_to_alpha(over, al_map_rgb(0,0,0));
   ALLEGRO_BITMAP *fundo_dun  = al_load_bitmap("Mapas/dungeon.bmp");
   ALLEGRO_BITMAP *colisao_2 = al_load_bitmap("Mapas/dungeon_col.bmp");
+  ALLEGRO_BITMAP *V1  = al_load_bitmap("Personagens/villagers/v1.bmp");
+  ALLEGRO_BITMAP *V2  = al_load_bitmap("Personagens/villagers/v2.bmp");
+  ALLEGRO_BITMAP *V3  = al_load_bitmap("Personagens/villagers/v3.bmp");
+  ALLEGRO_BITMAP *V4  = al_load_bitmap("Personagens/villagers/v4.bmp");
+  ALLEGRO_BITMAP *V5  = al_load_bitmap("Personagens/villagers/v5.bmp");
+  ALLEGRO_BITMAP *V6  = al_load_bitmap("Personagens/villagers/v6.bmp");
+  ALLEGRO_BITMAP *V7  = al_load_bitmap("Personagens/villagers/v7.bmp");
+  ALLEGRO_BITMAP *V8  = al_load_bitmap("Personagens/villagers/v8.bmp");
+  ALLEGRO_BITMAP *V9  = al_load_bitmap("Personagens/villagers/v9.bmp");
   ALLEGRO_BITMAP *V10  = al_load_bitmap("Personagens/villagers/v10.bmp");
 
 
@@ -151,7 +160,7 @@ int main(){
 
         Desenha_fundo(&mapa_atual, fundo, fundo_dun); //no arquivo "Desenha_fundo.h"
         Desenha_personagem(&x, &y, prota); //no arquivo "Movimentos_personagem.h"
-        NPC(&mapa_atual, &count, load_pos, V10);
+        NPC(&mapa_atual, &count, load_pos,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10);
         Desenha_ov(&mapa_atual, over); //no arquivo "Desenha_ov.h"
 
         al_draw_filled_rectangle(15, 15, 15*vidas_personagem*2, 25, al_map_rgb(255,0,0));
