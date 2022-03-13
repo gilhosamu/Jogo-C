@@ -17,7 +17,7 @@
 
 int x = 416, y = 512, count = 0, mapa_atual = 0;
 int x2 = 416, y2 = 512, vidas_personagem = 5, stamina = 10, load_pos = 0; // variáveis que serão utilizadas pelo personagem
-const float FPS = 60;                                                     // taxa de quadros
+const float FPS = 144;                                                    // taxa de quadros
 int width = 800;
 int height = 600;                                          // tamanho da tela
 int key_down = 0, key_up = 0, key_left = 0, key_right = 0; // teclas do teclado AWSD
@@ -48,6 +48,7 @@ int main()
   al_convert_mask_to_alpha(over, al_map_rgb(0, 0, 0));
   ALLEGRO_BITMAP *fundo_dun = al_load_bitmap("Mapas/dungeon.bmp");
   ALLEGRO_BITMAP *colisao_2 = al_load_bitmap("Mapas/dungeon_col.bmp");
+  ALLEGRO_BITMAP *fundo_init = al_load_bitmap("Mapas/initial_screen.bmp");
   ALLEGRO_BITMAP *V1 = al_load_bitmap("Personagens/villagers/v1.bmp"); // usado
   ALLEGRO_BITMAP *V2 = al_load_bitmap("Personagens/villagers/v2.bmp"); // usado
   ALLEGRO_BITMAP *V3 = al_load_bitmap("Personagens/villagers/v3.bmp"); // usado
@@ -70,6 +71,8 @@ int main()
   ALLEGRO_BITMAP *IN1 = al_load_bitmap("Personagens/monstros/in1.bmp");
 
   ALLEGRO_FONT *fonte = al_load_font("monogram/ttf/monogram.ttf", 20, 0);
+  ALLEGRO_FONT *fonte_title = al_load_font("alagard/alagard.ttf", 48, 0);
+  ALLEGRO_FONT *fonte_subtitle = al_load_font("alagard/alagard.ttf", 16, 0);
 
   // cria um timer a 60 FPS
   ALLEGRO_TIMER *timer = NULL;
@@ -87,17 +90,6 @@ int main()
     return -1;
   }
 
-  // parte de audio
-  ALLEGRO_AUDIO_STREAM *musica_vila = al_load_audio_stream("soundtracks/vila.ogg", 1, 1024);
-  ALLEGRO_AUDIO_STREAM *dungeon = al_load_audio_stream("soundtracks/dungeon.ogg", 1, 1024);
-  al_reserve_samples(4);
-  al_attach_audio_stream_to_mixer(musica_vila, al_get_default_mixer());
-  al_attach_audio_stream_to_mixer(dungeon, al_get_default_mixer());
-  al_set_audio_stream_playmode(musica_vila, ALLEGRO_PLAYMODE_LOOP);
-  al_set_audio_stream_playmode(dungeon, ALLEGRO_PLAYMODE_LOOP);
-  ALLEGRO_SAMPLE *game_over = al_load_sample("soundtracks/Game_Over.ogg");
-  ALLEGRO_SAMPLE *fanfare = al_load_sample("soundtracks/fanfare.ogg");
-
   ALLEGRO_EVENT_QUEUE *event_queue = NULL;
   ALLEGRO_COLOR i; // será usado para detectar as colisões
   event_queue = al_create_event_queue();
@@ -106,7 +98,54 @@ int main()
   al_register_event_source(event_queue, al_get_keyboard_event_source());
   al_register_event_source(event_queue, al_get_display_event_source(display));
 
+  // parte de audio
+  ALLEGRO_AUDIO_STREAM *musica_vila = al_load_audio_stream("soundtracks/vila.ogg", 1, 1024);
+  ALLEGRO_AUDIO_STREAM *dungeon = al_load_audio_stream("soundtracks/dungeon.ogg", 1, 1024);
+  ALLEGRO_AUDIO_STREAM *title_theme = al_load_audio_stream("soundtracks/title_theme.ogg", 1, 1024);
+  al_reserve_samples(5);
+
+  al_attach_audio_stream_to_mixer(title_theme, al_get_default_mixer());
+
   al_start_timer(timer);
+
+  bool redraw = true;
+
+  while (1)
+  {
+
+    ALLEGRO_EVENT ev;
+    al_wait_for_event(event_queue, &ev);
+
+    if (ev.type == ALLEGRO_EVENT_TIMER)
+      redraw = true;
+    else if ((ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) || (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE))
+    {
+      done = true;
+      break;
+    }
+    else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+    {
+      al_set_audio_stream_playing(title_theme, false);
+      break;
+    }
+    if (redraw && al_is_event_queue_empty(event_queue))
+    {
+      al_set_target_backbuffer(display);
+
+      al_draw_bitmap(fundo_init, 0, 0, 0);
+      al_draw_text(fonte_title, al_map_rgb(255, 255, 255), 400, 125, 1, "Creepy caves");
+      al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para iniciar");
+      al_flip_display();
+      redraw = false;
+    }
+  }
+
+  al_attach_audio_stream_to_mixer(musica_vila, al_get_default_mixer());
+  al_attach_audio_stream_to_mixer(dungeon, al_get_default_mixer());
+  al_set_audio_stream_playmode(musica_vila, ALLEGRO_PLAYMODE_LOOP);
+  al_set_audio_stream_playmode(dungeon, ALLEGRO_PLAYMODE_LOOP);
+  ALLEGRO_SAMPLE *game_over = al_load_sample("soundtracks/Game_Over.ogg");
+  ALLEGRO_SAMPLE *fanfare = al_load_sample("soundtracks/fanfare.ogg");
 
   while (!done)
   { // enquando o jogo estiver rodando, todas as ações serão concentradas dentro deste loop
