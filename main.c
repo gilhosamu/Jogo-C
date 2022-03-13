@@ -113,7 +113,7 @@ int main()
 
     ALLEGRO_EVENT ev;
     al_wait_for_event(event_queue, &ev);
-    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
     {
       done = true;
     } // ESC para fechar o jogo
@@ -166,8 +166,7 @@ int main()
     al_set_target_backbuffer(display); // coloca o display em buffer para gerar um bitmap(será usado para detectar colisões)
 
     if (ev.type == ALLEGRO_EVENT_TIMER)
-    { // espera o timer
-
+    {          // espera o timer
       count++; // para contar o sprite das animções dos personagens
 
       if (al_is_event_queue_empty(event_queue))
