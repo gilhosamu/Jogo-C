@@ -7,10 +7,10 @@
 
 #define AB ALLEGRO_BITMAP
 
-void NPC(int *mapa_atual, int *count, int load_pos,AB *V1,AB *V2,AB *V3,AB *V4,AB *V5,AB *V6,AB *V7,AB *V8,AB *V9,AB *V10, AB *V11, AB *V12, AB *V13,AB *V14,AB *V15,AB *V16,AB *V17,AB *V18,AB *V19);
-void NPCin(int *mapa_atual, int *count,int *pos_x, int  *pos_y, int load_pos, AB *IN1);
-void Troca_mapa(int *mapa_atual, int *pos_x, int  *pos_y, int *load_pos);
-void Desenha_fundo(int *mapa_atual, AB *fundo, AB * fundo_dun );
+void NPC(int *mapa_atual, int *count, int load_pos, AB *V1, AB *V2, AB *V3, AB *V4, AB *V5, AB *V6, AB *V7, AB *V8, AB *V9, AB *V10, AB *V11, AB *V12, AB *V13, AB *V14, AB *V15, AB *V16, AB *V17, AB *V18, AB *V19);
+void NPCin(int *mapa_atual, int *count, int *pos_x, int *pos_y, int load_pos, AB *IN1);
+void Troca_mapa(int *mapa_atual, int *pos_x, int *pos_y, int *load_pos);
+void Desenha_fundo(int *mapa_atual, AB *fundo, AB *fundo_dun);
 void Desenha_fundo_colisao(int *mapa_atual, AB *colisao_1, AB *colisao_2);
 void movimenta_personagem(int key_up, int key_down, int key_right, int key_left, int *count, int *x, int *y);
 void Desenha_personagem(int *pos_x, int *pos_y, AB *prota);
