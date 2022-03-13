@@ -1,6 +1,6 @@
 # Execução do arquivo compilador
 
-`chmod u+x my run.sh `
+`chmod u+x run.sh `
 
 Executando o comando acima ele cria o script ./run.sh
 
