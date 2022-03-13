@@ -1,7 +1,5 @@
-# Execução do arquivo compilador
+# Execução do arquivo compilador - para linux e MacOSx
 
-`chmod u+x run.sh `
+`chmod u+x run.sh && ./run.sh`
 
-Executando o comando acima ele cria o script ./run.sh
-
-quando rodado no terminal ele compila o arquivo main.c e executa em seguida
+Executando o comando acima ele cria o script run.sh e em seguida roda o jogo
