@@ -16,8 +16,10 @@
 // #include "funcoes/NPCs.c"
 
 int x = 416, y = 512, count = 0, mapa_atual = 0, load_pos = 0;
-int x2 = 416, y2 = 512, vidas_personagem = 6, stamina = 10, ataque = 0; int venceu = 0; int venceu1 = 0;// variáveis que serão utilizadas pelo personagem
-const float FPS = 60;                                                    // taxa de quadros
+int x2 = 416, y2 = 512, vidas_personagem = 6, stamina = 10, ataque = 0;
+int venceu = 0;
+int venceu1 = 0;      // variáveis que serão utilizadas pelo personagem
+const float FPS = 60; // taxa de quadros
 int width = 800;
 int height = 600;                                          // tamanho da tela
 int key_down = 0, key_up = 0, key_left = 0, key_right = 0; // teclas do teclado AWSD
@@ -82,8 +84,6 @@ int main()
   ALLEGRO_BITMAP *IN11 = al_load_bitmap("Personagens/monstros/in11.bmp");
   ALLEGRO_BITMAP *IN12 = al_load_bitmap("Personagens/monstros/in12.bmp");
   ALLEGRO_BITMAP *IN13 = al_load_bitmap("Personagens/monstros/in13.bmp");
-
-
 
   ALLEGRO_FONT *fonte = al_load_font("monogram/ttf/monogram.ttf", 20, 0);
   ALLEGRO_FONT *fonte_title = al_load_font("alagard/alagard.ttf", 48, 0);
@@ -161,7 +161,8 @@ int main()
       al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 190, 580, 1, "Programadores: Gabriel Novaslki e Lucas Aguiar");
       al_flip_display();
       redraw = false;
-      venceu = 0; venceu1 = 0;
+      venceu = 0;
+      venceu1 = 0;
     }
   }
 
@@ -294,8 +295,15 @@ int main()
           NPCin(&done, &venceu, &mapa_atual, &count, &x2, &y2, &stamina, &ataque, player_hit, player_hurt, load_pos, IN1, IN2, IN3, IN4, IN5, IN6, IN7, IN8, IN9, IN10, IN11, IN12, IN13);
           Desenha_ov(&mapa_atual, over); // no arquivo "Desenha_ov.h"
           escreve_texto(&mapa_atual, fonte, &x, &y, &T_pressionado, &enter_pressionado);
-          if(vidas_personagem < 1 && stamina < 1){done = true;}
-          if(stamina < 1){vidas_personagem = vidas_personagem -1; stamina = 10;}
+          if (vidas_personagem < 1 && stamina < 1)
+          {
+            done = true;
+          }
+          if (stamina < 1)
+          {
+            vidas_personagem = vidas_personagem - 1;
+            stamina = 10;
+          }
           al_draw_filled_rectangle(0, 15, 15 * vidas_personagem * 2, 25, al_map_rgb(255, 0, 0));
           al_draw_filled_rectangle(0, 30, 15 * stamina * 1.5, 40, al_map_rgb(0, 255, 125));
         }
@@ -315,13 +323,24 @@ int main()
     {
       if (finish)
         break;
-        x = 416; y = 512; count = 0; mapa_atual = 0;
-        x2 = 416; y2 = 512; vidas_personagem = 5; stamina = 10; load_pos = 0;
-      if(venceu == 0){
-          al_play_sample(game_over,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
-        }else{
-          al_play_sample(fanfare,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL); venceu1 = 1;
-        }
+      x = 416;
+      y = 512;
+      count = 0;
+      mapa_atual = 0;
+      x2 = 416;
+      y2 = 512;
+      vidas_personagem = 5;
+      stamina = 10;
+      load_pos = 0;
+      if (venceu == 0)
+      {
+        al_play_sample(game_over, 1.0, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+      }
+      else
+      {
+        al_play_sample(fanfare, 1.0, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        venceu1 = 1;
+      }
 
       al_set_audio_stream_playing(musica_vila, false);
       al_set_audio_stream_playing(dungeon, false);
@@ -353,7 +372,7 @@ int main()
         al_draw_text(fonte_title, al_map_rgb(255, 255, 255), 400, 125, 1, "GAME OVER");
         al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para re-iniciar");
         al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 190, 580, 1, "Programadores: Gabriel Novaslki e Lucas Aguiar");
-        
+
         al_flip_display();
         redraw = false;
       }
