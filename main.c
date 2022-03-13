@@ -16,7 +16,7 @@
 // #include "funcoes/NPCs.c"
 
 int x = 416, y = 512, count = 0, mapa_atual = 0, load_pos = 0;
-int x2 = 416, y2 = 512, vidas_personagem = 4, stamina = 10, ataque = 0; // variáveis que serão utilizadas pelo personagem
+int x2 = 416, y2 = 512, vidas_personagem = 6, stamina = 10, ataque = 0; int venceu = 0; int venceu1 = 0;// variáveis que serão utilizadas pelo personagem
 const float FPS = 60;                                                    // taxa de quadros
 int width = 800;
 int height = 600;                                          // tamanho da tela
@@ -160,6 +160,7 @@ int main()
       al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para iniciar");
       al_flip_display();
       redraw = false;
+      venceu = 0; venceu1 = 0;
     }
   }
 
@@ -289,7 +290,7 @@ int main()
           Desenha_fundo(&mapa_atual, fundo, fundo_dun); // no arquivo "Desenha_fundo.h"
           Desenha_personagem(&x, &y, prota);            // no arquivo "Movimentos_personagem.h"
           NPC(&mapa_atual, &count, load_pos, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19);
-          NPCin(&done, &mapa_atual, &count, &x2, &y2, &stamina, &ataque, player_hit, player_hurt, load_pos, IN1, IN2, IN3, IN4, IN5, IN6, IN7, IN8, IN9, IN10, IN11, IN12, IN13);
+          NPCin(&done, &venceu, &mapa_atual, &count, &x2, &y2, &stamina, &ataque, player_hit, player_hurt, load_pos, IN1, IN2, IN3, IN4, IN5, IN6, IN7, IN8, IN9, IN10, IN11, IN12, IN13);
           Desenha_ov(&mapa_atual, over); // no arquivo "Desenha_ov.h"
           escreve_texto(&mapa_atual, fonte, &x, &y, &T_pressionado, &enter_pressionado);
           if(vidas_personagem < 1 && stamina < 1){done = true;}
@@ -314,9 +315,13 @@ int main()
       if (finish)
         break;
         x = 416; y = 512; count = 0; mapa_atual = 0;
-        x2 = 416; y2 = 512; vidas_personagem = 4; stamina = 10; load_pos = 0;
-      //al_attach_audio_stream_to_mixer(game_over, al_get_default_mixer());
-      //al_play_sample(game_over, al_get_default_mixer());
+        x2 = 416; y2 = 512; vidas_personagem = 5; stamina = 10; load_pos = 0;
+      if(venceu == 0 && venceu1 == 0){
+        al_play_sample(game_over,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL); venceu1 = 1;
+      } 
+      else if(venceu == 1 && venceu1 == 0){
+        al_play_sample(fanfare,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);  venceu1 = 1;
+      }
 
       al_set_audio_stream_playing(musica_vila, false);
       al_set_audio_stream_playing(dungeon, false);

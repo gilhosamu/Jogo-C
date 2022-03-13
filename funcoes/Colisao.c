@@ -106,7 +106,7 @@ void Troca_mapa(int *mapa_atual, int *pos_x, int *pos_y, int *load_pos)
         }
         if (*pos_y == 566)
         {
-            *mapa_atual = 3;
+            *mapa_atual = 2;
             *pos_y = 32;
             *load_pos = 0;
         }
