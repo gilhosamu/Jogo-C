@@ -38,6 +38,7 @@ int main()
   al_init_ttf_addon();
 
   bool done = false;
+  bool finish = false;
 
   // carrega todos o bitmaps do jogo
   ALLEGRO_BITMAP *prota = al_load_bitmap("Personagens/Protagonista.bmp");
@@ -147,135 +148,185 @@ int main()
   ALLEGRO_SAMPLE *game_over = al_load_sample("soundtracks/Game_Over.ogg");
   ALLEGRO_SAMPLE *fanfare = al_load_sample("soundtracks/fanfare.ogg");
 
-  while (!done)
-  { // enquando o jogo estiver rodando, todas as ações serão concentradas dentro deste loop
+  while (!finish)
+  {
 
-    ALLEGRO_EVENT ev;
-    al_wait_for_event(event_queue, &ev);
-    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-    {
-      done = true;
-    } // ESC para fechar o jogo
+    while (!done)
+    { // enquando o jogo estiver rodando, todas as ações serão concentradas dentro deste loop
 
-    // faz o procedimento mostrado pelo professor para detecção de teclas mantidas pressionadas
-
-    if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
-    {
-      switch (ev.keyboard.keycode)
+      ALLEGRO_EVENT ev;
+      al_wait_for_event(event_queue, &ev);
+      if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
       {
-      case ALLEGRO_KEY_W:
-        key_up = 1;
-        break;
-      case ALLEGRO_KEY_S:
-        key_down = 1;
-        break;
-      case ALLEGRO_KEY_D:
-        key_right = 1;
-        break;
-      case ALLEGRO_KEY_A:
-        key_left = 1;
-        break;
-      case ALLEGRO_KEY_T:
-        T_pressionado = 1;
-        break;
-      case ALLEGRO_KEY_ENTER:
-        enter_pressionado = 1;
-        break;
+        done = true;
+        finish = true;
+      } // ESC para fechar o jogo
+
+      if (ev.keyboard.keycode == ALLEGRO_KEY_F)
+      {
+        done = true;
+      }
+
+      // faz o procedimento mostrado pelo professor para detecção de teclas mantidas pressionadas
+
+      if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+      {
+        switch (ev.keyboard.keycode)
+        {
+        case ALLEGRO_KEY_W:
+          key_up = 1;
+          break;
+        case ALLEGRO_KEY_S:
+          key_down = 1;
+          break;
+        case ALLEGRO_KEY_D:
+          key_right = 1;
+          break;
+        case ALLEGRO_KEY_A:
+          key_left = 1;
+          break;
+        case ALLEGRO_KEY_T:
+          T_pressionado = 1;
+          break;
+        case ALLEGRO_KEY_ENTER:
+          enter_pressionado = 1;
+          break;
+        }
+      }
+      if (ev.type == ALLEGRO_EVENT_KEY_UP)
+      {
+        switch (ev.keyboard.keycode)
+        {
+        case ALLEGRO_KEY_W:
+          key_up = 0;
+          break;
+        case ALLEGRO_KEY_S:
+          key_down = 0;
+          break;
+        case ALLEGRO_KEY_D:
+          key_right = 0;
+          break;
+        case ALLEGRO_KEY_A:
+          key_left = 0;
+          break;
+        }
+      }
+
+      al_set_target_backbuffer(display); // coloca o display em buffer para gerar um bitmap(será usado para detectar colisões)
+
+      if (ev.type == ALLEGRO_EVENT_TIMER)
+      {          // espera o timer
+        count++; // para contar o sprite das animções dos personagens
+
+        if (al_is_event_queue_empty(event_queue))
+        { // espera a fila de eventos ficar livre
+
+          movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2); // no arquivo "Movimentos_personagem.h"
+          Desenha_fundo_colisao(&mapa_atual, colisao_1, colisao_2);                      // no arquivo "Desenha_fundo.h"
+
+          /*
+          esta parte do código verifica se o personagem encostou em uma zona do choque(muros, paredes, etc...)
+          funciona através da detecção de pixel na tela, todo o mapa é coberto com a cor 255, 0, 255 e as partes que colidem são marcadas com preto
+          caso a função al_get_pixel() detectar alguma cor diferente de 255 no vermelho o personagem não passa por essa zona
+          são repetidas 4 linhas parecidas para os 4 cantos da imagem do personagem
+          */
+          i = al_get_pixel(al_get_backbuffer(display), x2, y2);
+          if (i.r != 1)
+          {
+            x2 = x;
+            y2 = y;
+          }
+          i = al_get_pixel(al_get_backbuffer(display), x2 + 32, y2);
+          if (i.r != 1)
+          {
+            x2 = x;
+            y2 = y;
+          }
+          i = al_get_pixel(al_get_backbuffer(display), x2, y2 + 32);
+          if (i.r != 1)
+          {
+            x2 = x;
+            y2 = y;
+          }
+          i = al_get_pixel(al_get_backbuffer(display), x2 + 32, y2 + 32);
+          if (i.r != 1)
+          {
+            x2 = x;
+            y2 = y;
+          }
+
+          Troca_mapa(&mapa_atual, &x2, &y2, &load_pos); // no arquivo "Colisao.h"
+
+          if (mapa_atual < 8 && mapa_atual >= 0)
+          { // toca a musica da vila quando personagem se encontra na vila
+            al_set_audio_stream_playing(dungeon, false);
+            al_set_audio_stream_playing(musica_vila, true);
+          }
+          if (mapa_atual > 7)
+          { // toca a musica da dungeon quando personagem se encontra na dungeon
+            al_set_audio_stream_playing(musica_vila, false);
+            al_set_audio_stream_playing(dungeon, true);
+          }
+
+          Desenha_fundo(&mapa_atual, fundo, fundo_dun); // no arquivo "Desenha_fundo.h"
+          Desenha_personagem(&x, &y, prota);            // no arquivo "Movimentos_personagem.h"
+          NPC(&mapa_atual, &count, load_pos, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19);
+          NPCin(&mapa_atual, &count, &x2, &y2, load_pos, IN1);
+          Desenha_ov(&mapa_atual, over); // no arquivo "Desenha_ov.h"
+          escreve_texto(&mapa_atual, fonte, &x, &y, &T_pressionado, &enter_pressionado);
+          al_draw_filled_rectangle(15, 15, 15 * vidas_personagem * 2, 25, al_map_rgb(255, 0, 0));
+          al_draw_filled_rectangle(15, 30, 15 * stamina * 1.5, 40, al_map_rgb(0, 255, 125));
+        }
+
+        if (count == 27)
+        {
+          count = 0;
+        }
+        x = x2;
+        y = y2; // x2 e y2 são um "buffer" para o personagem não ficar tremendo quando entra em colisão
+        load_pos = 1;
+        al_flip_display(); // envia os desenhoas à tela
       }
     }
-    if (ev.type == ALLEGRO_EVENT_KEY_UP)
+
+    while (1)
     {
-      switch (ev.keyboard.keycode)
+      if (finish)
+        break;
+      al_attach_audio_stream_to_mixer(game_over, al_get_default_mixer());
+
+      al_set_audio_stream_playing(musica_vila, false);
+      al_set_audio_stream_playing(dungeon, false);
+
+      ALLEGRO_EVENT ev;
+      al_wait_for_event(event_queue, &ev);
+
+      if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
       {
-      case ALLEGRO_KEY_W:
-        key_up = 0;
-        break;
-      case ALLEGRO_KEY_S:
-        key_down = 0;
-        break;
-      case ALLEGRO_KEY_D:
-        key_right = 0;
-        break;
-      case ALLEGRO_KEY_A:
-        key_left = 0;
+        al_set_audio_stream_playing(dungeon, false);
+        done = true;
+        finish = true;
         break;
       }
-    }
 
-    al_set_target_backbuffer(display); // coloca o display em buffer para gerar um bitmap(será usado para detectar colisões)
-
-    if (ev.type == ALLEGRO_EVENT_TIMER)
-    {          // espera o timer
-      count++; // para contar o sprite das animções dos personagens
-
-      if (al_is_event_queue_empty(event_queue))
-      { // espera a fila de eventos ficar livre
-
-        movimenta_personagem(key_up, key_down, key_right, key_left, &count, &x2, &y2); // no arquivo "Movimentos_personagem.h"
-        Desenha_fundo_colisao(&mapa_atual, colisao_1, colisao_2);                      // no arquivo "Desenha_fundo.h"
-
-        /*
-        esta parte do código verifica se o personagem encostou em uma zona do choque(muros, paredes, etc...)
-        funciona através da detecção de pixel na tela, todo o mapa é coberto com a cor 255, 0, 255 e as partes que colidem são marcadas com preto
-        caso a função al_get_pixel() detectar alguma cor diferente de 255 no vermelho o personagem não passa por essa zona
-        são repetidas 4 linhas parecidas para os 4 cantos da imagem do personagem
-        */
-        i = al_get_pixel(al_get_backbuffer(display), x2, y2);
-        if (i.r != 1)
-        {
-          x2 = x;
-          y2 = y;
-        }
-        i = al_get_pixel(al_get_backbuffer(display), x2 + 32, y2);
-        if (i.r != 1)
-        {
-          x2 = x;
-          y2 = y;
-        }
-        i = al_get_pixel(al_get_backbuffer(display), x2, y2 + 32);
-        if (i.r != 1)
-        {
-          x2 = x;
-          y2 = y;
-        }
-        i = al_get_pixel(al_get_backbuffer(display), x2 + 32, y2 + 32);
-        if (i.r != 1)
-        {
-          x2 = x;
-          y2 = y;
-        }
-
-        Troca_mapa(&mapa_atual, &x2, &y2, &load_pos); // no arquivo "Colisao.h"
-
-        if (mapa_atual < 8 && mapa_atual >= 0)
-        { // toca a musica da vila quando personagem se encontra na vila
-          al_set_audio_stream_playing(dungeon, false);
-          al_set_audio_stream_playing(musica_vila, true);
-        }
-        if (mapa_atual > 7)
-        { // toca a musica da dungeon quando personagem se encontra na dungeon
-          al_set_audio_stream_playing(musica_vila, false);
-          al_set_audio_stream_playing(dungeon, true);
-        }
-
-        Desenha_fundo(&mapa_atual, fundo, fundo_dun); // no arquivo "Desenha_fundo.h"
-        Desenha_personagem(&x, &y, prota);            // no arquivo "Movimentos_personagem.h"
-        NPC(&mapa_atual, &count, load_pos, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19);
-        NPCin(&mapa_atual, &count, &x2, &y2, load_pos, IN1);
-        Desenha_ov(&mapa_atual, over); // no arquivo "Desenha_ov.h"
-        escreve_texto(&mapa_atual, fonte, &x, &y, &T_pressionado, &enter_pressionado);
-        al_draw_filled_rectangle(15, 15, 15 * vidas_personagem * 2, 25, al_map_rgb(255, 0, 0));
-        al_draw_filled_rectangle(15, 30, 15 * stamina * 1.5, 40, al_map_rgb(0, 255, 125));
-      }
-
-      if (count == 27)
+      if (ev.type == ALLEGRO_EVENT_TIMER)
+        redraw = true;
+      else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
       {
-        count = 0;
+        al_set_audio_stream_playing(dungeon, false);
+        done = false;
+        break;
       }
-      x = x2;
-      y = y2; // x2 e y2 são um "buffer" para o personagem não ficar tremendo quando entra em colisão
-      load_pos = 1;
-      al_flip_display(); // envia os desenhoas à tela
+      if (redraw && al_is_event_queue_empty(event_queue))
+      {
+        al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+
+        al_draw_text(fonte_title, al_map_rgb(255, 255, 255), 400, 125, 1, "GAME OVER");
+        al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para re-iniciar");
+        al_flip_display();
+        redraw = false;
+      }
     }
   }
 
