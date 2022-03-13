@@ -158,6 +158,7 @@ int main()
       al_draw_bitmap(fundo_init, 0, 0, 0);
       al_draw_text(fonte_title, al_map_rgb(255, 255, 255), 400, 125, 1, "Creepy caves");
       al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para iniciar");
+      al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 190, 580, 1, "Programadores: Gabriel Novaslki e Lucas Aguiar");
       al_flip_display();
       redraw = false;
       venceu = 0; venceu1 = 0;
@@ -316,12 +317,11 @@ int main()
         break;
         x = 416; y = 512; count = 0; mapa_atual = 0;
         x2 = 416; y2 = 512; vidas_personagem = 5; stamina = 10; load_pos = 0;
-      if(venceu == 0 && venceu1 == 0){
-        al_play_sample(game_over,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL); venceu1 = 1;
-      } 
-      else if(venceu == 1 && venceu1 == 0){
-        al_play_sample(fanfare,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);  venceu1 = 1;
-      }
+      if(venceu == 0){
+          al_play_sample(game_over,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
+        }else{
+          al_play_sample(fanfare,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL); venceu1 = 1;
+        }
 
       al_set_audio_stream_playing(musica_vila, false);
       al_set_audio_stream_playing(dungeon, false);
@@ -352,11 +352,13 @@ int main()
 
         al_draw_text(fonte_title, al_map_rgb(255, 255, 255), 400, 125, 1, "GAME OVER");
         al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 400, 175, 1, "Pressione ENTER para re-iniciar");
+        al_draw_text(fonte_subtitle, al_map_rgb(255, 255, 255), 190, 580, 1, "Programadores: Gabriel Novaslki e Lucas Aguiar");
         
         al_flip_display();
         redraw = false;
       }
     }
+    break;
   }
 
   // destroi tudo que foi criado pelo allegro
