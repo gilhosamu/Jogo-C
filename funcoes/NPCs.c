@@ -5,10 +5,8 @@
 struct npc
 {
     int vidas;
-    int causa_dano;
     int x;
     int y;
-    int morto;
     int aut;
     int pos;
     int des_x;
@@ -19,6 +17,10 @@ struct npc v1;
 struct npc v10;
 struct npc v13;
 struct npc inimigo1;
+struct npc inimigo2;
+struct npc inimigo3;
+struct npc inimigo4;
+struct npc inimigo5;
 
 void NPC(int *mapa_atual, int *count, int load_pos, AB *V1, AB *V2, AB *V3, AB *V4, AB *V5, AB *V6, AB *V7, AB *V8, AB *V9, AB *V10, AB *V11, AB *V12, AB *V13, AB *V14, AB *V15, AB *V16, AB *V17, AB *V18, AB *V19)
 { // NPCs da vila
@@ -214,18 +216,19 @@ void NPC(int *mapa_atual, int *count, int load_pos, AB *V1, AB *V2, AB *V3, AB *
     }
 }
 
-void NPCin(int *mapa_atual, int *count, int *pos_x, int *pos_y, int load_pos, AB *IN1)
+void NPCin(int *mapa_atual, int *count, int *pos_x, int *pos_y, int *stamina, int *ataque, ALLEGRO_SAMPLE *player_hit, ALLEGRO_SAMPLE *player_hurt, int load_pos, AB *IN1, AB *IN2, AB *IN3, AB *IN4, AB *IN5, AB *IN6, AB *IN7, AB *IN8, AB *IN9, AB *IN10, AB *IN11, AB *IN12, AB *IN13)
 {
     if (load_pos == 0)
     {
-        inimigo1.x = 544;
-        inimigo1.y = 144;
-        inimigo1.aut = 0;
+        inimigo1.x = 544; inimigo1.y = 144; inimigo1.aut = 0; inimigo1.vidas =5;
+        inimigo2.x = 600; inimigo2.y = 500; inimigo2.aut = 0; inimigo2.vidas =5;
+        inimigo3.x = 350; inimigo3.y = 200; inimigo3.aut = 0; inimigo3.vidas =5;
+        inimigo4.x = 400; inimigo4.y = 500; inimigo4.aut = 0; inimigo4.vidas =5;
     }
     switch (*mapa_atual)
     {
     case 8:
-        al_draw_bitmap_region(IN1, inimigo1.des_x, inimigo1.des_y, 32, 32, inimigo1.x, inimigo1.y, 0);
+        if(inimigo1.vidas > 0){al_draw_bitmap_region(IN1, inimigo1.des_x, inimigo1.des_y, 32, 32, inimigo1.x, inimigo1.y, 0);}
         if (*count % 2 == 0 && (MODULO(inimigo1.x - *pos_x) < 110) && (MODULO(inimigo1.y - *pos_y) < 110))
         {
             if (inimigo1.x < *pos_x && MODULO(inimigo1.x - *pos_x) > 20)
@@ -269,6 +272,149 @@ void NPCin(int *mapa_atual, int *count, int *pos_x, int *pos_y, int load_pos, AB
                 }
             }
         }
+        if(inimigo2.vidas > 0){al_draw_bitmap_region(IN2, inimigo2.des_x, inimigo2.des_y, 32, 32, inimigo2.x, inimigo2.y, 0);} //inimigo 2
+        if (*count % 2 == 0 && (MODULO(inimigo2.x - *pos_x) < 110) && (MODULO(inimigo2.y - *pos_y) < 110))
+        {
+            if (inimigo2.x < *pos_x && MODULO(inimigo2.x - *pos_x) > 20)
+            {
+                inimigo2.des_y = 64;
+                inimigo2.x = inimigo2.x + 1;
+                inimigo2.des_x = inimigo2.des_x + 32;
+                if (inimigo2.des_x > 64)
+                {
+                    inimigo2.des_x = 0;
+                }
+            }
+            if (inimigo2.x > *pos_x && MODULO(inimigo2.x - *pos_x) > 20)
+            {
+                inimigo2.des_y = 32;
+                inimigo2.x = inimigo2.x - 1;
+                inimigo2.des_x = inimigo2.des_x + 32;
+                if (inimigo2.des_x > 64)
+                {
+                    inimigo2.des_x = 0;
+                }
+            }
+            if (inimigo2.y < *pos_y && MODULO(inimigo2.y - *pos_y) > 20)
+            {
+                inimigo2.des_y = 0;
+                inimigo2.y = inimigo2.y + 1;
+                inimigo2.des_x = inimigo2.des_x + 32;
+                if (inimigo2.des_x > 64)
+                {
+                    inimigo2.des_x = 0;
+                }
+            }
+            if (inimigo2.y > *pos_y && MODULO(inimigo2.y - *pos_y) > 20)
+            {
+                inimigo2.des_y = 96;
+                inimigo2.y = inimigo2.y - 1;
+                inimigo2.des_x = inimigo2.des_x + 32;
+                if (inimigo2.des_x > 64)
+                {
+                    inimigo2.des_x = 0;
+                }
+            }
+        }
+        if(inimigo4.vidas > 0){al_draw_bitmap_region(IN5, inimigo4.des_x, inimigo4.des_y, 32, 32, inimigo4.x, inimigo4.y, 0);} //inimigo 2
+        if (*count % 2 == 0 && (MODULO(inimigo4.x - *pos_x) < 110) && (MODULO(inimigo4.y - *pos_y) < 110))
+        {
+            if (inimigo4.x < *pos_x && MODULO(inimigo4.x - *pos_x) > 20)
+            {
+                inimigo4.des_y = 64;
+                inimigo4.x = inimigo4.x + 1;
+                inimigo4.des_x = inimigo4.des_x + 32;
+                if (inimigo4.des_x > 64)
+                {
+                    inimigo4.des_x = 0;
+                }
+            }
+            if (inimigo4.x > *pos_x && MODULO(inimigo4.x - *pos_x) > 20)
+            {
+                inimigo4.des_y = 32;
+                inimigo4.x = inimigo4.x - 1;
+                inimigo4.des_x = inimigo4.des_x + 32;
+                if (inimigo4.des_x > 64)
+                {
+                    inimigo4.des_x = 0;
+                }
+            }
+            if (inimigo4.y < *pos_y && MODULO(inimigo4.y - *pos_y) > 20)
+            {
+                inimigo4.des_y = 0;
+                inimigo4.y = inimigo4.y + 1;
+                inimigo4.des_x = inimigo4.des_x + 32;
+                if (inimigo4.des_x > 64)
+                {
+                    inimigo4.des_x = 0;
+                }
+            }
+            if (inimigo4.y > *pos_y && MODULO(inimigo4.y - *pos_y) > 20)
+            {
+                inimigo4.des_y = 96;
+                inimigo4.y = inimigo4.y - 1;
+                inimigo4.des_x = inimigo4.des_x + 32;
+                if (inimigo4.des_x > 64)
+                {
+                    inimigo4.des_x = 0;
+                }
+            }
+        }
+        if(inimigo3.vidas > 0){al_draw_bitmap_region(IN8, inimigo3.des_x, inimigo3.des_y, 32, 32, inimigo3.x, inimigo3.y, 0);} //inimigo 2
+        if (*count % 2 == 0 && (MODULO(inimigo3.x - *pos_x) < 110) && (MODULO(inimigo3.y - *pos_y) < 110))
+        {
+            if (inimigo3.x < *pos_x && MODULO(inimigo3.x - *pos_x) > 20)
+            {
+                inimigo3.des_y = 64;
+                inimigo3.x = inimigo3.x + 1;
+                inimigo3.des_x = inimigo3.des_x + 32;
+                if (inimigo3.des_x > 64)
+                {
+                    inimigo3.des_x = 0;
+                }
+            }
+            if (inimigo3.x > *pos_x && MODULO(inimigo3.x - *pos_x) > 20)
+            {
+                inimigo3.des_y = 32;
+                inimigo3.x = inimigo3.x - 1;
+                inimigo3.des_x = inimigo3.des_x + 32;
+                if (inimigo3.des_x > 64)
+                {
+                    inimigo3.des_x = 0;
+                }
+            }
+            if (inimigo3.y < *pos_y && MODULO(inimigo3.y - *pos_y) > 20)
+            {
+                inimigo3.des_y = 0;
+                inimigo3.y = inimigo3.y + 1;
+                inimigo3.des_x = inimigo3.des_x + 32;
+                if (inimigo3.des_x > 64)
+                {
+                    inimigo3.des_x = 0;
+                }
+            }
+            if (inimigo3.y > *pos_y && MODULO(inimigo3.y - *pos_y) > 20)
+            {
+                inimigo3.des_y = 96;
+                inimigo3.y = inimigo3.y - 1;
+                inimigo3.des_x = inimigo3.des_x + 32;
+                if (inimigo3.des_x > 64)
+                {
+                    inimigo3.des_x = 0;
+                }
+            }
+        }
+        if((MODULO(inimigo1.x - *pos_x)<30 && MODULO(inimigo1.y - *pos_y)<30) && *count == 2 && inimigo1.vidas > 0){*stamina = *stamina -2; al_play_sample(player_hurt,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo2.x - *pos_x)<30 && MODULO(inimigo2.y - *pos_y)<30) && *count == 2 && inimigo2.vidas > 0){*stamina = *stamina -2; al_play_sample(player_hurt,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo3.x - *pos_x)<30 && MODULO(inimigo3.y - *pos_y)<30) && *count == 2 && inimigo3.vidas > 0){*stamina = *stamina -2; al_play_sample(player_hurt,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo4.x - *pos_x)<30 && MODULO(inimigo4.y - *pos_y)<30) && *count == 2 && inimigo4.vidas > 0){*stamina = *stamina -2; al_play_sample(player_hurt,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+
+        if((MODULO(inimigo1.x - *pos_x)<30 && MODULO(inimigo1.y - *pos_y)<30) && *ataque == 1 && inimigo1.vidas > 0){inimigo1.vidas = inimigo1.vidas -1; al_play_sample(player_hit,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo2.x - *pos_x)<30 && MODULO(inimigo2.y - *pos_y)<30) && *ataque == 1 && inimigo2.vidas > 0){inimigo2.vidas = inimigo2.vidas -1; al_play_sample(player_hit,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo3.x - *pos_x)<30 && MODULO(inimigo3.y - *pos_y)<30) && *ataque == 1 && inimigo3.vidas > 0){inimigo3.vidas = inimigo3.vidas -1; al_play_sample(player_hit,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        if((MODULO(inimigo4.x - *pos_x)<30 && MODULO(inimigo4.y - *pos_y)<30) && *ataque == 1 && inimigo4.vidas > 0){inimigo4.vidas = inimigo4.vidas -1; al_play_sample(player_hit,1.0,0.5,1.0,ALLEGRO_PLAYMODE_ONCE, NULL);}
+        load_pos = 0;
+        if(inimigo1.vidas < 1 && inimigo2.vidas < 1 && inimigo3.vidas < 1 && inimigo4.vidas < 1){*mapa_atual = *mapa_atual +1; load_pos = 1; *pos_x = 700; *pos_y = 150;}
         break;
     case 9:
         break;
@@ -277,4 +423,5 @@ void NPCin(int *mapa_atual, int *count, int *pos_x, int *pos_y, int load_pos, AB
     case 11:
         break;
     }
+    *ataque = 0;
 }
