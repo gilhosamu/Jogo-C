@@ -1,4 +1,4 @@
-#define velocidade_carinha 1.5
+#define velocidade_carinha 1
 #include "funcoes.h"
 int posicao = 4;
 
