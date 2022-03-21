@@ -70,7 +70,7 @@ void movimenta_personagem(int key_up, int key_down, int key_right, int key_left,
     }
 }
 
-void Desenha_personagem(int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota)
+void Desenha_personagem(int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota, int *ataque)
 {
     switch (posicao)
     {
@@ -110,5 +110,17 @@ void Desenha_personagem(int *pos_x, int *pos_y, ALLEGRO_BITMAP *prota)
     case 11:
         al_draw_bitmap_region(prota, 64, 64, 32, 32, *pos_x, *pos_y, 0);
         break;
+    }
+    if(*ataque == 1 && (posicao < 3 && posicao >= 0)){
+        al_draw_line(*pos_x +8, *pos_y +25, *pos_x +8, *pos_y+40, al_map_rgb(255, 255, 255), 2);
+    }
+    if(*ataque == 1 && (posicao < 6 && posicao >= 3)){
+        al_draw_line(*pos_x +29, *pos_y +25, *pos_x +29, *pos_y-8, al_map_rgb(255, 255, 255), 2);
+    }
+    if(*ataque == 1 && (posicao < 9 && posicao >= 6)){
+        al_draw_line(*pos_x +8, *pos_y +25, *pos_x -20, *pos_y+25, al_map_rgb(255, 255, 255), 2);
+    }
+    if(*ataque == 1 && (posicao < 12 && posicao >= 9)){
+        al_draw_line(*pos_x +25, *pos_y +25, *pos_x +47, *pos_y+25, al_map_rgb(255, 255, 255), 2);
     }
 }

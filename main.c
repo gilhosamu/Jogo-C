@@ -290,7 +290,7 @@ int main()
           }
 
           Desenha_fundo(&mapa_atual, fundo, fundo_dun); // no arquivo "Desenha_fundo.h"
-          Desenha_personagem(&x, &y, prota);            // no arquivo "Movimentos_personagem.h"
+          Desenha_personagem(&x, &y, prota, &ataque);            // no arquivo "Movimentos_personagem.h"
           NPC(&mapa_atual, &count, load_pos, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16, V17, V18, V19);
           NPCin(&done, &venceu, &mapa_atual, &count, &x2, &y2, &stamina, &ataque, player_hit, player_hurt, load_pos, IN1, IN2, IN3, IN4, IN5, IN6, IN7, IN8, IN9, IN10, IN11, IN12, IN13);
           Desenha_ov(&mapa_atual, over); // no arquivo "Desenha_ov.h"

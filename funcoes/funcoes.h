@@ -15,6 +15,6 @@ void Troca_mapa(int *mapa_atual, int *pos_x, int *pos_y, int *load_pos);
 void Desenha_fundo(int *mapa_atual, AB *fundo, AB *fundo_dun);
 void Desenha_fundo_colisao(int *mapa_atual, AB *colisao_1, AB *colisao_2);
 void movimenta_personagem(int key_up, int key_down, int key_right, int key_left, int *count, int *x, int *y);
-void Desenha_personagem(int *pos_x, int *pos_y, AB *prota);
+void Desenha_personagem(int *pos_x, int *pos_y, AB *prota, int *ataque);
 void Desenha_ov(int *mapa_atual, AB *over);
 void escreve_texto(int *mapa_atual, ALLEGRO_FONT *fonte, int *px, int *py, int *T_pressionado, int *enter_pressionado);
